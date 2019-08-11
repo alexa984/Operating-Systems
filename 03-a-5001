@@ -1,0 +1,7 @@
+-- 03-a-5001
+
+Колко хора не се казват Ivan според /etc/passwd
+
+
+cat /etc/passwd | cut -d ':' -f 1 | grep -v 'Ivan' | wc -l
+

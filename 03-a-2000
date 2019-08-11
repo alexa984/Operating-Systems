@@ -1,0 +1,18 @@
+-- 03-a-2000
+
+Извадете от файл /etc/passwd:
+- първите 12 реда
+- първите 26 символа
+- всички редове, освен последните 4
+- последните 17 реда
+- 151-я ред (или друг произволен, ако нямате достатъчно редове)
+- последните 4 символа от 13-ти ред
+
+	* cat /etc/passwd | head -n 12
+	* cat /etc/passwd | head -c 26
+	* cat /etc/passwd | head -n $(expr $(cat /etc/passwd | wc -l) - 4)
+	  or cat /etc/passwd | head -n -4 | wc -l
+	* cat /etc/passwd | tail -n 17
+	* cat /etc/passwd | head -n 31 | tail -n 1
+	* cat /etc/passwd | head -n 13 | tail -n 1 | tail -c 4
+

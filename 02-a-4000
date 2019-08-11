@@ -1,0 +1,9 @@
+-- 02-a-4000
+
+Създайте файл permissions.txt в home директорията си. За него дайте единствено - read права на потребителя създал файла, write and exec на групата, read and exec на всички останали. Направете го и с битове, и чрез "буквички".
+
+cd /home
+touch permissions.txt
+chmod 0435 permissions.txt
+chmod u=r,g=wx,o=rx permissions.txt 
+

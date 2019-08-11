@@ -1,0 +1,6 @@
+-- 03-a-1500
+
+Намерете броя на символите в /etc/passwd. А колко реда има в /etc/passwd?
+
+cat /etc/passwd | wc -c
+cat /etc/passwd | wc -l

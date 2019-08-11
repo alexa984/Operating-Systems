@@ -1,0 +1,7 @@
+-- 03-b-3500
+
+Колко файлове в /bin са shell script? (Колко файлове в дадена директория са ASCII text?)
+
+find /bin -type f -regextype posix-extended -regex ".*\.sh$"| wc -l
+find /bin -type f -exec file {} \; | grep 'ASCII text'
+

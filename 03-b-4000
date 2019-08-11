@@ -1,0 +1,42 @@
+-- 03-b-4000
+
+Създайте следната файлова йерархия.
+/home/s...../dir1/file1
+/home/s...../dir1/file2
+/home/s...../dir1/file3
+
+Посредством vi въведете следното съдържание:
+file1:
+1
+2
+3
+
+file2:
+s
+a
+d
+f
+
+file3:
+3
+2
+1
+45
+42
+14
+1
+52
+
+Изведете на екрана:
+	* статистика за броя редове, думи и символи за всеки един файл
+	* статистика за броя редове и символи за всички файлове
+	* общия брой редове на трите файла
+
+-----------------------------------------------------------------------
+
+mkdir -p home/s62229/dir1
+touch home/s62229/dir1/file{1..3}
+vi home/s62229/dir1/file{1..3}	#navigate through files with :n & :p, save with :x
+	* find home/s62229/dir1 -name "file[1,2,3]" -exec sh -c "cat {} | wc {}" \;
+	* find home/s62229/dir1 -name "file[1,2,3]" -exec cat {} \; | wc -lc
+	* find home/s62229/dir1 -name "file[1,2,3]" -exec cat {} \; | wc -l  

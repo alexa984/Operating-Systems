@@ -1,0 +1,6 @@
+-- 02-a-5000
+
+Копирайте secret.txt от /tmp/os2018/02/ в home директорията си. Прочетете го с командата cat. (Ако този файл го няма, прочетете с cat произволен текстов файл напр. /etc/passwd)
+
+cp /tmp/os2018/02/secret.txt /home
+cat /home/secret.txt
