@@ -1,0 +1,391 @@
+
+    $0 - The name of the Bash script.
+    $1 - $9 - The first 9 arguments to the Bash script. (As mentioned above.)
+    $# - How many arguments were passed to the Bash script.
+    $@ - All the arguments supplied to the Bash script.
+    $? - The exit status of the most recently run process.
+    $$ - The process ID of the current script.
+    $USER - The username of the user running the script.
+    $HOSTNAME - The hostname of the machine the script is running on.
+    $SECONDS - The number of seconds since the script was started.
+    $RANDOM - Returns a different random number each time is it referred to.
+    $LINENO - Returns the current line number in the Bash script.
+
+
+Достъпване на променлива става с $.
+Ако присвояваме стринг на променлива може и без кавички ако е само една дума.
+В противен случай използваме кавички:
+	-единични кавички:
+	 интерпретира буквално това, което е в кавичките
+	Пр.
+		myvar='Hello World'
+		newvar='More $myvar'
+		echo $newvar
+	Изход:  More $myvar
+
+
+	-двойни кавички:
+	 вътре може да си извикваме някакви неща с доларче(позволява субституции)
+	Пр.
+		myvar='Hello World'
+		newvar="More $myvar"
+		echo $newvar
+	Изход:  More Hello World	
+
+
+На променлива може да задаваме изхода от изпълнение на някоя команда:
+myvar=$( ls /etc | wc -l )
+echo There are $myvar entries in the directory /etc
+бележка: ако командата връща повече от един ред, се премахват новите редове и всичко е на един
+
+export var1
+   -Make the variable var1 available to child processes.
+   -прави се копие на променливата от текущия скоуп. от там насетне каквито и промени да прави другия процес по дадената ѝ променлива, те няма да се отразят в началния скоуп.
+Пример:
+-----script1.sh-----
+
+    #!/bin/bash
+    # demonstrate variable scope 1.
+    var1=blah
+    var2=foo
+    # Let's verify their current value
+    echo $0 :: var1 : $var1, var2 : $var2
+    export var1
+    ./script2.sh
+    # Let's see what they are now
+    echo $0 :: var1 : $var1, var2 : $var2
+
+-----script2.sh-----
+
+    #!/bin/bash
+    # demonstrate variable scope 2
+    # Let's verify their current value
+    echo $0 :: var1 : $var1, var2 : $var2
+    # Let's change their values
+    var1=flop
+    var2=bleh
+
+резултатът от изпълнението на script1.sh:
+script1.sh :: var1 : blah, var2 : foo
+script2.sh :: var1 : blah, var2 :
+script1.sh :: var1 : blah, var2 : foo
+
+reditrect to file - use >
+append to file - use >>
+< Read input from a file.
+2> Redirect error messages.
+| Send the output from one program as input to another program.
+
+If we use the less than operator ( < ) then we can send data the other way. We will read data from the file and feed it into the program via it's STDIN stream.
+
+
+to get processID of firefox for example:
+ps aux | grep 'firefox'
+числото след user-a e номерът на процеса
+
+за да видим процесите:
+ -top
+ -ps #връща прецесите, вървящи в текущия терминал
+ -ps aux
+
+за да убием процес:
+ -kill [procID]
+ ex: kill 6978
+
+Sometimes you are lucky and just running kill normally will get the process to stop and exit. When you do this kill sends the default signal ( 1 ) to the process which effectively asks the process nicely to quit. We always try this option first as a clean quit is the best option. Sometimes this does not work however. In the example above we ran ps again and saw that the process was still running. No worries, we can run kill again but this time supply a signal of 9 which effectively means, go in with a sledge hammer and make sure the process is well and truly gone.
+ex: kill -9 6978
+
+note: Normal users may only kill processes which they are the owner for. The root user on the system may kill anyones processes.
+
+
+jobs - Display a list of current jobs running in the background.
+fg - Move a background process into the foreground.
+ctrl + z - Pause the current foreground process and move it into the background.
+
+basename -s .jpg -a *.jpg | xargs -n1 -i cp {}.jpg {}_original.jpg
+    Make a copy of every jpg image file in the current directory and rename adding _original.
+
+
+to process data that is piped to our program:
+
+    STDIN - /dev/stdin or /proc/self/fd/0
+    STDOUT - /dev/stdout or /proc/self/fd/1
+    STDERR - /dev/stderr or /proc/self/fd/2
+
+example:
+    #!/bin/bash
+    # A basic summary of my sales report
+    echo Here is a summary of the sales data:
+    echo ====================================
+    echo
+    cat /dev/stdin | cut -d' ' -f 2,3 | sort
+
+in terminal:
+user@bash: cat salesdata.txt
+Fred apples 20 April 4
+Susy oranges 5 April 7
+Mark watermelons 12 April 10
+Terry peaches 7 April 15
+user@bash: cat salesdata.txt | ./summary
+Here is a summary of the sales data:
+====================================
+apples 20
+oranges 5
+peaches 7
+watermelons 12
+
+
+let "a = 4 * 5"
+echo $a # 20
+
+expr is similar to let except instead of saving the result to a variable it instead prints the answer
+expr 5+4
+
+double brackets((...))
+a=$((3+5))
+echo $a # 8
+
+
+${#variable} - get length of variable
+
+! EXPRESSION 		The EXPRESSION is false.
+-n STRING 		The length of STRING is greater than zero.
+-z STRING 		The lengh of STRING is zero (ie it is empty).
+STRING1 = STRING2 	STRING1 is equal to STRING2
+STRING1 != STRING2 	STRING1 is not equal to STRING2
+INTEGER1 -eq INTEGER2 	INTEGER1 is numerically equal to INTEGER2
+INTEGER1 -gt INTEGER2 	INTEGER1 is numerically greater than INTEGER2
+INTEGER1 -lt INTEGER2 	INTEGER1 is numerically less than INTEGER2
+-d FILE 		FILE exists and is a directory.
+-e FILE 		FILE exists.
+-r FILE 		FILE exists and the read permission is granted.
+-s FILE 		FILE exists and it's size is greater than zero (ie. it is not empty).
+-w FILE 		FILE exists and the write permission is granted.
+-x FILE 		FILE exists and the execute permission is granted.
+
+
+•comm(1)- compare two sorted files line by line
+•diff(1)- compare files line by line
+•patch(1)- apply a diff file to an original
+•basename(1)- strip directory and suffix from filenames
+•dirname(1)- strip last component from file name
+•md5sum(1)- compute and check MD5 message digest
+•sha1sum(1)- compute and check SHA1 message digest
+•sha256sum(1)- compute and check SHA256 messagedigest
+
+IFS stands for "internal field separator". It is used by the shell to determine how to do word splitting
+
+while [ <some test> ]
+do
+<commands>
+done
+
+
+for var in <list>
+do
+<commands>
+done
+
+Пример:
+for value in {1..5}
+do
+echo $value
+done
+
+for value in {10..0..2} #10 8 6 4 2 0
+do
+echo $value
+done
+
+
+
+    #!/bin/bash
+    # Make a php copy of any html files in directory, given as argument to the script
+    for value in $1/*.html
+    do
+    cp $value $1/$( basename -s .html $value ).php
+    done
+
+
+select var in <list>
+do
+<commands>
+done
+
+example:
+
+    #!/bin/bash
+    # A simple menu system
+    names='Kyle Cartman Stan Quit'
+    PS3='Select character: '
+    select name in $names
+    do
+    if [ $name == 'Quit' ]
+    then
+    break
+    fi
+    echo Hello $name
+    done
+    echo Bye
+
+execution:
+user@bash: ./select_example.sh
+    1) Kyle     3) Stan
+    2) Cartman  4) Quit
+    Select character: 2
+    Hello Cartman
+    Select Character: 1
+    Hello Kyle
+    Select character: 4
+    Bye
+user@bash:
+
+
+
+
+    #!/bin/bash
+    # Setting a return value to a function
+    lines_in_file () {
+    cat $1 | wc -l
+    }
+    num_lines=$( lines_in_file $1 )
+    echo The file $1 has $num_lines lines in it.
+
+global and local variables
+
+
+find . -type l -ls
+Explanation: find from the current directory . onwards all references of -type link and list -ls those in detail. Plain and simple...
+
+Expanding upon this answer, here are a couple more symbolic link related find commands:
+Find symbolic links to a specific target
+
+find . -lname link_target
+
+Note that link_target is a pattern that may contain wildcard characters.
+Find broken symbolic links
+
+find -L . -type l -ls
+
+The -L option instructs find to follow symbolic links, unless when broken.
+Find & replace broken symbolic links
+
+find -L . -type l -delete -exec ln -s new_target {} \;
+
+
+Loop through string:
+$ echo "Hello world" | sed -e 's/\(.\)/\1\n/g'
+foo=string
+for (( i=0; i<${#foo}; i++ )); do
+  echo "${foo:$i:1}" #${foo:$i:1} expands to the substring starting at position $i of length 1.
+done
+
+if [ -f  file_name ];then
+   echo "True - File Exists"
+else
+   echo "Sorry - File Not Found"
+fi
+
+Strip the longest match of $substring from the front or back of a string
+We can use the syntax of ${string##substring} to Strip the longest match of $substring from front of $string
+To strip the longest match of $substring from the back of $string we can use ${string##substring}
+The "##" signifies the front and "%% signifies from the back.
+
+Example:
+#!/bin/bash
+test="land.of.linux"
+echo "Stripping the shortest match from front:"
+echo ${test#*.}
+
+echo "Stripping the shortest match from back:"
+echo ${test%.*}
+
+echo "Stripping the longest match from front:" 
+echo ${test##*.}
+
+echo "Stripping the longest match from back:" 
+echo ${test%%.*}
+
+Output from the above script:
+Stripping the shortest match from front:
+of.linux
+Stripping the shortest match from back:
+land.of
+Stripping the longest match from front:
+linux
+Stripping the longest match from back:
+land
+
+
+index - Numerical position in $string of first character in $substring that matches
+
+The following "index" command is useful as it allows you to find the first character within a substring. The index command will report back the position within the substring if a match is found or a "0" if no match was found:
+The following syntax can be used:expr index "$string" $substring
+The script below illustrates the basic use of the "index" command.
+#!/bin/bash
+test="AaBbCcDdEeFfGg"
+testa=`expr index "$test" C`
+testb=`expr index "$test" D`
+testc=`expr index "$test" E`
+testd=`expr index "$test" Z`
+echo "testa is in position: $testa"
+echo "testb is in position: $testb"
+echo "testc is in position: $testc"
+echo "testd is in position: $testd"
+
+Output from the above script:
+john@john-desktop:~/scripts$ ./test18.sh 
+testa is in position: 5
+testb is in position: 7
+testc is in position: 9
+testd is in position: 0
+
+
+Replace ALL matches of $substring with replacement value
+
+The following command allows you to replace all matches of the specified substring with a replacement value:
+${string//substring/replacement}
+Example:
+#!/bin/bash
+test="one two three one four one five"
+echo "Before replacement: $test"
+echo "After replacement: ${test//one/xxx}"
+Output from the above script:
+john@john-desktop:~/scripts$ ./test16.sh 
+Before replacement: one two three one four one five
+After replacement: xxx two three xxx four xxx five
+
+Аrray example:
+#!/bin/bash
+#
+# Array Example
+#
+test=(one two three four five)
+echo ${test[0]}
+echo ${test[1]}
+echo ${test[2]}
+echo ${test[3]}
+echo ${test[4]}
+echo ${test[*]}
+test[5]=six
+echo ${test[*]}
+ Output from above array script
+john@john-desktop:~/scripts$ ./array2.sh 
+one
+two
+three
+four
+five
+one two three four five
+one two three four five six
+
+
+🥝️ use shift command for looping through the arguments
+as if we have $@ = a b c d
+shift
+now $@ = b c d
+shift
+now $@ = c d
+etc.
+
+
