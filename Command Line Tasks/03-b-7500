@@ -1,0 +1,7 @@
+-- 03-b-7500
+
+Даден ви е ASCII текстов файл (например /etc/services). Отпечатайте хистограма на N-те (например 10) най-често срещани думи.
+histogram?!
+
+cat /etc/services | tr "\t " "\n" | sort | uniq -c | sort -nr -t ' ' -k1 | head -n 10
+

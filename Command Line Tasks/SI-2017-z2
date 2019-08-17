@@ -1,0 +1,15 @@
+
+-- SI-2017-z2
+
+Задача 2:
+Намерете имената на топ 5 файлове в текущата директория с най-много hardlinks.
+
+Примерен изход:
+a1.txt
+a2.txt
+a3.txt
+b1.txt
+b2.txt
+
+
+Having max number of hardlinks means to have max number of same inode.
