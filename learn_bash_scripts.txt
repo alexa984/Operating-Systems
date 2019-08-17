@@ -40,7 +40,7 @@ echo There are $myvar entries in the directory /etc
 
 export var1
    -Make the variable var1 available to child processes.
-   -прави се копие на променливата от текущия скоуп. от там насетне каквито и промени да прави другия процес по дадената ѝ променлива, те няма да се отразят в началния скоуп.
+   -прави се копие на променливата от текущия скоуп. Oт там насетне каквито и промени да прави другия процес по дадената му променлива, те няма да се отразят в началния скоуп.
 Пример:
 -----script1.sh-----
 
@@ -67,7 +67,7 @@ export var1
 
 резултатът от изпълнението на script1.sh:
 script1.sh :: var1 : blah, var2 : foo
-script2.sh :: var1 : blah, var2 :
+script2.sh :: var1 : blah, var2 : foo
 script1.sh :: var1 : blah, var2 : foo
 
 reditrect to file - use >
@@ -138,9 +138,11 @@ watermelons 12
 let "a = 4 * 5"
 echo $a # 20
 
-expr is similar to let except instead of saving the result to a variable it instead prints the answer
+expr is similar to let except instead of saving the result to a variable it prints the answer
 expr 5+4
 
+
+#best choice
 double brackets((...))
 a=$((3+5))
 echo $a # 8
@@ -148,6 +150,7 @@ echo $a # 8
 
 ${#variable} - get length of variable
 
+test conditions:
 ! EXPRESSION 		The EXPRESSION is false.
 -n STRING 		The length of STRING is greater than zero.
 -z STRING 		The lengh of STRING is zero (ie it is empty).
@@ -163,7 +166,13 @@ INTEGER1 -lt INTEGER2 	INTEGER1 is numerically less than INTEGER2
 -w FILE 		FILE exists and the write permission is granted.
 -x FILE 		FILE exists and the execute permission is granted.
 
+* test condition && do_stuff- изпълнява do_stuff, ако условието е вярно
+* test condition || do_stuff- изпълнява do_stuff, ако условието не е вярно
+* Може и двете заедно: test $((6*9)) -eq 42 && echo "Yep" || echo "Wrong"
+* [[ 4 -eq 5 ]] е еквивалентен запис за test 4 -eq 5
 
+
+Some commands:
 •comm(1)- compare two sorted files line by line
 •diff(1)- compare files line by line
 •patch(1)- apply a diff file to an original
@@ -174,6 +183,7 @@ INTEGER1 -lt INTEGER2 	INTEGER1 is numerically less than INTEGER2
 •sha256sum(1)- compute and check SHA256 messagedigest
 
 IFS stands for "internal field separator". It is used by the shell to determine how to do word splitting
+
 
 while [ <some test> ]
 do
@@ -189,22 +199,23 @@ done
 Пример:
 for value in {1..5}
 do
-echo $value
+    echo $value
 done
+
 
 for value in {10..0..2} #10 8 6 4 2 0
 do
-echo $value
+    echo $value
 done
 
 
 
-    #!/bin/bash
-    # Make a php copy of any html files in directory, given as argument to the script
-    for value in $1/*.html
-    do
+#!/bin/bash
+# Make a php copy of any html files in directory, given as argument to the script
+for value in $1/*.html
+do
     cp $value $1/$( basename -s .html $value ).php
-    done
+done
 
 
 select var in <list>
@@ -254,22 +265,18 @@ user@bash:
 global and local variables
 
 
-find . -type l -ls
-Explanation: find from the current directory . onwards all references of -type link and list -ls those in detail. Plain and simple...
-
-Expanding upon this answer, here are a couple more symbolic link related find commands:
-Find symbolic links to a specific target
-
+# Find symbolic links to a specific target
 find . -lname link_target
 
-Note that link_target is a pattern that may contain wildcard characters.
-Find broken symbolic links
+NB> Note that link_target is a pattern that may contain wildcard characters.
 
+
+# Find broken symbolic links
 find -L . -type l -ls
+NB> The -L option instructs find to follow symbolic links, unless when broken.
 
-The -L option instructs find to follow symbolic links, unless when broken.
-Find & replace broken symbolic links
 
+# Find & replace broken symbolic links
 find -L . -type l -delete -exec ln -s new_target {} \;
 
 
