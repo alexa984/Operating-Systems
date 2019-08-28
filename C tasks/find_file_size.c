@@ -12,7 +12,7 @@ int main (int argc, char* argv[])
     fseek (pFile, 0, SEEK_END);
     size=ftell (pFile);
     fclose (pFile);
-    printf ("Size of myfile.txt: %ld bytes.\n",size);
+    printf ("Size of my file: %ld bytes.\n",size);
   }
   return 0;
 }
